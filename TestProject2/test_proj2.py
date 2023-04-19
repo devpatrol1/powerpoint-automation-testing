@@ -31,8 +31,8 @@ def update_data_slide(root, topic, dslide):
     data1_placeholder = dslide.placeholders[14]
     data2_placeholder = dslide.placeholders[16]
 
-    text2_placeholder.text = 'This is Step #1'
-    text4_placeholder.text = 'This is showing Step #2'
+    text2_placeholder.text = 'This is an example of Step #1'
+    text4_placeholder.text = 'This example is showing Step #2'
     chart1img = chart1_placeholder.insert_picture(root + topic + '/chart1.png')
     chart2img = chart2_placeholder.insert_picture(root + topic + '/chart2.png')
     data1img = data1_placeholder.insert_picture(root + topic + '/data1.png')
@@ -42,8 +42,8 @@ def update_data_slide(root, topic, dslide):
 
 
 
-prs = Presentation('test_ppt2.pptx')
-#get_placeholder_info(prs) #TESTING
+prs = Presentation('test_ppt2_template.pptx')
+get_placeholder_info(prs) #Only needed to find out placeholder names & indexes
 
 root='./presentation_info/'
 folder_list = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
@@ -74,4 +74,4 @@ for x in range(1, len(all_slides), 2):
     update_data_slide(root, folder_list[num], all_slides[x+1])
     num += 1
 
-prs.save('test_ppt2.pptx')
+prs.save('test_ppt2_finalcopy.pptx')

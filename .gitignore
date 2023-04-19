@@ -119,6 +119,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+auto-ppt-env/
 TestProject1/auto-ppt-env/
 TestProject2/auto-ppt-env2/
 TestProject3/auto-ppt-env3/
