@@ -1,10 +1,8 @@
 import collections 
 import collections.abc
 from pptx import Presentation
-from pptx.enum.shapes import MSO_SHAPE
-from pptx.util import Inches
-from PIL import Image
-import os
+from PIL import Image, ImageOps
+import os, sys
 
 
 def get_placeholder_info(prs):
@@ -14,10 +12,27 @@ def get_placeholder_info(prs):
             print('%d %s' % (placeholder.placeholder_format.idx, placeholder.name))
 
 
+def pad_img(path):
+    img_dir = os.listdir(path)
+    for item in img_dir:
+        if os.path.isfile(path+item):
+            img = Image.open(path+item)
+            right = 200
+            left = 200
+            top = 100
+            bottom = 100       
+            width, height = img.size
+            new_width = width + right + left
+            new_height = height + top + bottom            
+            new_img = Image.new(img.mode, (new_width, new_height), (255, 255, 255))
+            #place old image on new image           
+            new_img.paste(img, (left, top))
+            new_img.save(path + item)
+
+
 def add_slide(prs, layout, title):
     slide = prs.slides.add_slide(layout)
     slide.shapes.title.text = title
-
     return slide
 
 
@@ -33,30 +48,20 @@ def update_data_slide(root, topic, dslide):
     chart2_placeholder = dslide.placeholders[15]
     data1_placeholder = dslide.placeholders[14]
     data2_placeholder = dslide.placeholders[16]
-
-    text1_placeholder.text = 'This is an example of Step #1'
-    text2_placeholder.text = 'This example is showing Step #2'
+    text1_placeholder.text = 'Example of Sub-Header #1'
+    text2_placeholder.text = 'Example of Sub-Header #2'
     chart1img = chart1_placeholder.insert_picture(root + topic + '/chart1.png')
     chart2img = chart2_placeholder.insert_picture(root + topic + '/chart2.png')
     data1img = data1_placeholder.insert_picture(root + topic + '/data1.png')
     data2img = data2_placeholder.insert_picture(root + topic + '/data2.png')
-
     return chart1img, chart2img, data1img, data2img
 
 
 def update_process_slide(root, topic, pslide):
-    text1_placeholder = pslide.placeholders[3]
-    text2_placeholder = pslide.placeholders[17]
-    text3_placeholder = pslide.placeholders[18]
     pic1_placeholder = pslide.placeholders[13]
     pic2_placeholder = pslide.placeholders[15]
-
-    text1_placeholder.text = 'Example of My Process Header'
-    text2_placeholder.text = 'This example is showing one sub-topic'
-    text3_placeholder.text = 'This is another sub-topic example'
     pic1img = pic1_placeholder.insert_picture(root + topic + '/pic1.png')
     pic2img = pic2_placeholder.insert_picture(root + topic + '/pic2.png')
-
     return pic1img, pic2img
 
 
@@ -65,10 +70,16 @@ def update_process_slide(root, topic, pslide):
 prs = Presentation('test_ppt2_template.pptx')
 #get_placeholder_info(prs) #Only needed to find out placeholder names & indexes
 
-root='./presentation_info/'
+root ='./presentation_info/'
 folder_list = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
 all_slides = prs.slides
 
+#Pad images for insertion in slides 
+for x in range (len(folder_list)):
+    topic = folder_list[x]
+    path = root + topic + '/'
+    pad_img(path)
+    
 # Update existing intro slide
 main_topic = 'Methods for Writing Continuous Applications'
 intro_slide = all_slides[0]
@@ -99,3 +110,4 @@ for x in range(1, len(all_slides), 3):
     num += 1
 
 prs.save('test_ppt2_finalcopy.pptx')
+
