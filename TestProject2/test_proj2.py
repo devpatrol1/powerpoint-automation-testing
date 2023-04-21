@@ -36,9 +36,9 @@ def add_slide(prs, layout, title):
     return slide
 
 
-def update_topic_slide(tslide):
+def update_topic_slide(tslide, num):
     subtitle_placeholder = tslide.placeholders[1]
-    subtitle_placeholder.text = 'Structured Streaming Method'
+    subtitle_placeholder.text = 'Structured Streaming Method #'+ num
 
 
 def update_data_slide(root, topic, dslide):
@@ -104,7 +104,7 @@ for x in range (len(folder_list)):
 #Update slides with subtitles and images by topic
 num = 0
 for x in range(1, len(all_slides), 3):
-    update_topic_slide(all_slides[x])
+    update_topic_slide(all_slides[x], str(num+1))
     update_data_slide(root, folder_list[num], all_slides[x+1])
     update_process_slide(root, folder_list[num], all_slides[x+2])
     num += 1
